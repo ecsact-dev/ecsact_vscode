@@ -4,6 +4,10 @@
     "displayName": "ECS IDL VSCode Support",
     "description": "ECS IDL VSCode Support",
     "version": "0.1.0",
+    "publisher": "Seaube",
+    "repository": {
+        "url": "https://github.com/zaucy/ecs-idl-vscode"
+    },
     "engines": {
         "vscode": "^1.45.0"
     },
