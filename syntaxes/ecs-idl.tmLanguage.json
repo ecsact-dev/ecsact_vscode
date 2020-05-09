@@ -1,0 +1,103 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "ECS IDL",
+	"patterns": [
+		{
+			"include": "#global_keywords"
+		},
+		{
+			"include": "#comments"
+		},
+		{
+			"include": "#component_decl"
+		},
+		{
+			"include": "#action_decl"
+		}
+	],
+	"repository": {
+		"comments": {
+			"patterns": [
+				{
+					"name": "comment.line.double-slash",
+					"match": "//(.*)$"
+				},
+				{
+					"name": "comment.line.number-sign",
+					"match": "#(.*)$"
+				},
+				{
+					"name": "comment.block",
+					"begin": "/\\*",
+					"end": "\\*/"
+				}
+			]
+		},
+		"global_keywords": {
+			"patterns": [
+				{
+					"name": "keyword.other",
+					"match": "\\b(package)\\b"
+				}
+			]
+		},
+		"type_decl": {
+			"patterns": [
+				{
+					"match": "\\b(component|action|enum|struct)\\b\\s+([A-Za-z]+)",
+					"captures": {
+						"1": {
+							"name": "keyword.ecs-idl"
+						},
+						"2": {
+							"name": "entity.name.type"
+						}
+					}
+				}
+			]
+		},
+		"component_decl": {
+			"begin": "\\b(component)\\b\\s+([A-Za-z]+)\\s*{",
+			"end": "}",
+			"captures": {
+				"1": {
+					"name": "keyword.ecs-idl"
+				},
+				"2": {
+					"name": "entity.name.type"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#builtin_type"
+				}
+			]
+		},
+		"action_decl": {
+			"begin": "\\b(action)\\b\\s+([A-Za-z]+)\\s*{",
+			"end": "}",
+			"captures": {
+				"1": {
+					"name": "keyword.ecs-idl"
+				},
+				"2": {
+					"name": "entity.name.type"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#builtin_type"
+				}
+			]
+		},
+		"builtin_type": {
+			"patterns": [
+				{
+					"name": "storage.type",
+					"match": "\\b(int8|uint8|int16|uint16|int32|uint32|bool)\\b"
+				}
+			]
+		}
+	},
+	"scopeName": "source.ecs-idl"
+}

@@ -1,0 +1,38 @@
+{
+    "name": "ecs-idl-vscode",
+    "private": true,
+    "displayName": "ECS IDL VSCode Support",
+    "description": "ECS IDL VSCode Support",
+    "version": "0.1.0",
+    "engines": {
+        "vscode": "^1.45.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [
+            {
+                "id": "ecs-idl",
+                "aliases": [
+                    "ECS IDL",
+                    "ecs-idl"
+                ],
+                "extensions": [
+                    ".ecs-idl"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "ecs-idl",
+                "scopeName": "source.ecs-idl",
+                "path": "./syntaxes/ecs-idl.tmLanguage.json"
+            }
+        ]
+    },
+    "devDependencies": {
+        "js-yaml": "^3.13.1"
+    }
+}
