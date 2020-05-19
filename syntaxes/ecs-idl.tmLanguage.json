@@ -13,6 +13,9 @@
 		},
 		{
 			"include": "#action_decl"
+		},
+		{
+			"include": "#system_decl"
 		}
 	],
 	"repository": {
@@ -87,6 +90,26 @@
 			"patterns": [
 				{
 					"include": "#builtin_type"
+				},
+				{
+					"include": "#system_component_decl"
+				}
+			]
+		},
+		"system_decl": {
+			"begin": "\\b(system)\\b\\s+([A-Za-z]+)\\s*{",
+			"end": "}",
+			"captures": {
+				"1": {
+					"name": "keyword.ecs-idl"
+				},
+				"2": {
+					"name": "entity.name.type"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#system_component_decl"
 				}
 			]
 		},
@@ -95,6 +118,21 @@
 				{
 					"name": "storage.type",
 					"match": "\\b(int8|uint8|int16|uint16|int32|uint32|bool)\\b"
+				}
+			]
+		},
+		"system_component_decl": {
+			"patterns": [
+				{
+					"match": "(((required|optional|readonly|exclude|include)\\s+)+)([A-Za-z]+)\\s*;",
+					"captures": {
+						"3": {
+							"name": "keyword.control"
+						},
+						"4": {
+							"name": "entity.name.type"
+						}
+					}
 				}
 			]
 		}
