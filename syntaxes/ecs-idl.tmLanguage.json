@@ -60,31 +60,46 @@
 			]
 		},
 		"component_decl": {
-			"begin": "\\b(component)\\b\\s+([A-Za-z]+)\\s*{",
-			"end": "}",
+			"begin": "\\b(component)\\b\\s+([A-Za-z]+)\\s*({)",
+			"end": "(})",
 			"captures": {
 				"1": {
 					"name": "keyword.ecs-idl"
 				},
 				"2": {
 					"name": "entity.name.type"
+				},
+				"3": {
+					"name": "punctuation"
+				},
+				"4": {
+					"name": "punctuation"
 				}
 			},
 			"patterns": [
 				{
 					"include": "#builtin_type"
+				},
+				{
+					"include": "#comments"
 				}
 			]
 		},
 		"action_decl": {
-			"begin": "\\b(action)\\b\\s+([A-Za-z]+)\\s*{",
-			"end": "}",
+			"begin": "\\b(action)\\b\\s+([A-Za-z]+)\\s*({)",
+			"end": "(})",
 			"captures": {
 				"1": {
 					"name": "keyword.ecs-idl"
 				},
 				"2": {
 					"name": "entity.name.type"
+				},
+				"3": {
+					"name": "punctuation"
+				},
+				"4": {
+					"name": "punctuation"
 				}
 			},
 			"patterns": [
@@ -93,23 +108,41 @@
 				},
 				{
 					"include": "#system_component_decl"
+				},
+				{
+					"include": "#generates_decl"
+				},
+				{
+					"include": "#comments"
 				}
 			]
 		},
 		"system_decl": {
-			"begin": "\\b(system)\\b\\s+([A-Za-z]+)\\s*{",
-			"end": "}",
+			"begin": "\\b(system)\\b\\s+([A-Za-z]+)\\s*({)",
+			"end": "(})",
 			"captures": {
 				"1": {
 					"name": "keyword.ecs-idl"
 				},
 				"2": {
 					"name": "entity.name.type"
+				},
+				"3": {
+					"name": "punctuation"
+				},
+				"4": {
+					"name": "punctuation"
 				}
 			},
 			"patterns": [
 				{
 					"include": "#system_component_decl"
+				},
+				{
+					"include": "#generates_decl"
+				},
+				{
+					"include": "#comments"
 				}
 			]
 		},
@@ -118,21 +151,56 @@
 				{
 					"name": "storage.type",
 					"match": "\\b(int8|uint8|int16|uint16|int32|uint32|bool)\\b"
+				},
+				{
+					"name": "punctuation",
+					"match": ";"
 				}
 			]
 		},
 		"system_component_decl": {
 			"patterns": [
 				{
-					"match": "(((required|optional|readonly|exclude|include)\\s+)+)([A-Za-z]+)\\s*;",
+					"match": "(((required\\s+readonly|optional\\s+readonly|required|optional|readonly|exclude|include|adds|removes)\\s+)+)([A-Za-z]+)\\s*(;)",
 					"captures": {
 						"3": {
 							"name": "keyword.control"
 						},
 						"4": {
 							"name": "entity.name.type"
+						},
+						"5": {
+							"name": "punctuation"
 						}
 					}
+				},
+				{
+					"include": "#system_decl"
+				},
+				{
+					"include": "#comments"
+				}
+			]
+		},
+		"generates_decl": {
+			"patterns": [
+				{
+					"begin": "(generates)\\s+({)",
+					"end": "}",
+					"captures": {
+						"0": {
+							"name": "keyword.operator"
+						},
+						"1": {
+							"name": "punctuation"
+						},
+						"2": {
+							"name": "punctuation"
+						}
+					}
+				},
+				{
+					"include": "#system_component_decl"
 				}
 			]
 		}
