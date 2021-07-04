@@ -66,7 +66,7 @@
 			]
 		},
 		"component_decl": {
-			"begin": "\\b(component)\\b\\s+([A-Za-z]+)\\s*({)",
+			"begin": "\\b(component)\\b\\s+([A-Za-z]+)\\s*({?)",
 			"end": "(})",
 			"beginCaptures": {
 				"1": {
@@ -89,7 +89,7 @@
 			},
 			"patterns": [
 				{
-					"include": "#builtin_type"
+					"include": "#field_decl"
 				},
 				{
 					"include": "#comments"
@@ -97,7 +97,7 @@
 			]
 		},
 		"transient_decl": {
-			"begin": "\\b(transient)\\b\\s+([A-Za-z]+)\\s*({)",
+			"begin": "\\b(transient)\\b\\s+([A-Za-z]+)\\s*({?)",
 			"end": "(})",
 			"beginCaptures": {
 				"1": {
@@ -120,7 +120,7 @@
 			},
 			"patterns": [
 				{
-					"include": "#builtin_type"
+					"include": "#field_decl"
 				},
 				{
 					"include": "#comments"
@@ -128,7 +128,7 @@
 			]
 		},
 		"action_decl": {
-			"begin": "\\b(action)\\b\\s+([A-Za-z]+)\\s*({)",
+			"begin": "\\b(action)\\b\\s+([A-Za-z]+)\\s*({?)",
 			"end": "(})",
 			"beginCaptures": {
 				"1": {
@@ -151,7 +151,7 @@
 			},
 			"patterns": [
 				{
-					"include": "#builtin_type"
+					"include": "#field_decl"
 				},
 				{
 					"include": "#system_component_decl"
@@ -165,7 +165,7 @@
 			]
 		},
 		"system_decl": {
-			"begin": "\\b(system)\\b\\s+([A-Za-z]+)\\s*({)",
+			"begin": "\\b(system)\\b\\s+([A-Za-z]+)\\s*({?)",
 			"end": "(})",
 			"beginCaptures": {
 				"1": {
@@ -199,7 +199,7 @@
 			]
 		},
 		"enum_decl": {
-			"begin": "\\b(enum)\\b\\s+([A-Za-z]+)\\s*({)",
+			"begin": "\\b(enum)\\b\\s+([A-Za-z]+)\\s*({?)",
 			"end": "(})",
 			"beginCaptures": {
 				"1": {
@@ -229,22 +229,28 @@
 				}
 			]
 		},
-		"builtin_type": {
+		"field_decl": {
 			"patterns": [
 				{
-					"name": "storage.type",
-					"match": "\\b(int8|uint8|int16|uint16|int32|uint32|bool)\\b"
-				},
-				{
-					"name": "punctuation",
-					"match": ";"
+					"match": "\\b((int8|uint8|int16|uint16|int32|uint32|bool)|([A-Za-z]+))\\b\\s+([A-Za-z]+)(;*)",
+					"captures": {
+						"2": {
+							"name": "storage.type"
+						},
+						"3": {
+							"name": "entity.name.type"
+						},
+						"5": {
+							"name": "punctuation"
+						}
+					}
 				}
 			]
 		},
 		"system_component_decl": {
 			"patterns": [
 				{
-					"match": "(((required\\s+readonly|optional\\s+readonly|required|optional|readonly|exclude|include|adds|removes)\\s+)+)([A-Za-z]+)\\s*(;)",
+					"match": "(((required\\s+readonly|optional\\s+readonly|required|optional|readonly|exclude|include|adds|removes)\\s+)+)([A-Za-z]+)\\s*(;*)",
 					"captures": {
 						"3": {
 							"name": "keyword.control"
@@ -268,7 +274,7 @@
 		"generates_decl": {
 			"patterns": [
 				{
-					"begin": "\\b(generates)\\b\\s*({)",
+					"begin": "\\b(generates)\\b\\s*({?)",
 					"end": "}",
 					"beginCaptures": {
 						"1": {
@@ -292,7 +298,7 @@
 		"enum_fields": {
 			"patterns": [
 				{
-					"match": "([A-Za-z]+)\\s*(=)\\s*(.?)(;)",
+					"match": "([A-Za-z]+)\\s*(=)\\s*\\-?(\\d+)(;*)",
 					"captures": {
 						"1": {
 							"name": "variable.other.enummember.ecs-idl"
