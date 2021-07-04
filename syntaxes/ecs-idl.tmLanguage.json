@@ -151,13 +151,13 @@
 			},
 			"patterns": [
 				{
-					"include": "#field_decl"
-				},
-				{
 					"include": "#system_component_decl"
 				},
 				{
 					"include": "#generates_decl"
+				},
+				{
+					"include": "#field_decl"
 				},
 				{
 					"include": "#comments"
@@ -232,7 +232,7 @@
 		"field_decl": {
 			"patterns": [
 				{
-					"match": "\\b((int8|uint8|int16|uint16|int32|uint32|bool)|([A-Za-z]+))\\b\\s+([A-Za-z]+)(;*)",
+					"match": "\\b((int8|uint8|int16|uint16|int32|uint32|bool)|([A-Za-z]+))\\b(\\s*\\[\\s*(\\d*)\\s*\\]\\s*)?\\s+([A-Za-z]+)(;*)",
 					"captures": {
 						"2": {
 							"name": "storage.type"
@@ -241,6 +241,9 @@
 							"name": "entity.name.type"
 						},
 						"5": {
+							"name": "constant.numeric.decimal.ecs-idl"
+						},
+						"7": {
 							"name": "punctuation"
 						}
 					}
