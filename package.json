@@ -3,7 +3,7 @@
     "private": true,
     "displayName": "ECS IDL VSCode Support",
     "description": "ECS IDL VSCode Support",
-    "version": "0.7.1",
+    "version": "0.7.2",
     "publisher": "Seaube",
     "repository": {
         "url": "https://github.com/zaucy/ecs-idl-vscode"
