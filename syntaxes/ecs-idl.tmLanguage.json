@@ -301,7 +301,7 @@
 		"enum_fields": {
 			"patterns": [
 				{
-					"match": "([A-Za-z]+)\\s*(=)\\s*\\-?(\\d+)(;*)",
+					"match": "([A-Za-z_]+)\\s*(=)\\s*\\-?(\\d+)(;*)",
 					"captures": {
 						"1": {
 							"name": "variable.other.enummember.ecs-idl"
