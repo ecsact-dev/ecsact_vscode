@@ -165,7 +165,7 @@
 			]
 		},
 		"system_decl": {
-			"begin": "\\b(system)\\b\\s+([A-Za-z]+)\\s*({?)",
+			"begin": "\\b(system)\\b\\s+([A-Za-z]*)\\s*({?)",
 			"end": "(})",
 			"beginCaptures": {
 				"1": {
