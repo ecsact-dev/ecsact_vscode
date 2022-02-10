@@ -1,6 +1,6 @@
 {
 	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-	"name": "ECS IDL",
+	"name": "ECSACT",
 	"patterns": [
 		{
 			"include": "#global_keywords"
@@ -56,7 +56,7 @@
 					"match": "\\b(component|transient|action|enum|struct)\\b\\s+([A-Za-z]+)",
 					"captures": {
 						"1": {
-							"name": "keyword.ecs-idl"
+							"name": "keyword.ecsact"
 						},
 						"2": {
 							"name": "entity.name.type"
@@ -70,7 +70,7 @@
 			"end": "(})",
 			"beginCaptures": {
 				"1": {
-					"name": "keyword.ecs-idl"
+					"name": "keyword.ecsact"
 				},
 				"2": {
 					"name": "entity.name.type"
@@ -101,7 +101,7 @@
 			"end": "(})",
 			"beginCaptures": {
 				"1": {
-					"name": "keyword.ecs-idl"
+					"name": "keyword.ecsact"
 				},
 				"2": {
 					"name": "entity.name.type"
@@ -132,7 +132,7 @@
 			"end": "(})",
 			"beginCaptures": {
 				"1": {
-					"name": "keyword.ecs-idl"
+					"name": "keyword.ecsact"
 				},
 				"2": {
 					"name": "entity.name.type"
@@ -169,7 +169,7 @@
 			"end": "(})",
 			"beginCaptures": {
 				"1": {
-					"name": "keyword.ecs-idl"
+					"name": "keyword.ecsact"
 				},
 				"2": {
 					"name": "entity.name.type"
@@ -203,7 +203,7 @@
 			"end": "(})",
 			"beginCaptures": {
 				"1": {
-					"name": "keyword.ecs-idl"
+					"name": "keyword.ecsact"
 				},
 				"2": {
 					"name": "entity.name.type"
@@ -241,7 +241,7 @@
 							"name": "entity.name.type"
 						},
 						"5": {
-							"name": "constant.numeric.decimal.ecs-idl"
+							"name": "constant.numeric.decimal.ecsact"
 						},
 						"7": {
 							"name": "punctuation"
@@ -281,7 +281,7 @@
 					"end": "}",
 					"beginCaptures": {
 						"1": {
-							"name": "keyword.ecs-idl"
+							"name": "keyword.ecsact"
 						},
 						"2": {
 							"name": "punctuation"
@@ -304,13 +304,13 @@
 					"match": "([A-Za-z_]+)\\s*(=)\\s*\\-?(\\d+)(;*)",
 					"captures": {
 						"1": {
-							"name": "variable.other.enummember.ecs-idl"
+							"name": "variable.other.enummember.ecsact"
 						},
 						"2": {
 							"name": "punctuation"
 						},
 						"3": {
-							"name": "constant.numeric.decimal.ecs-idl"
+							"name": "constant.numeric.decimal.ecsact"
 						},
 						"4": {
 							"name": "punctuation"
@@ -320,5 +320,5 @@
 			]
 		}
 	},
-	"scopeName": "source.ecs-idl"
+	"scopeName": "source.ecsact"
 }
