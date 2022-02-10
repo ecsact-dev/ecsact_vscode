@@ -3,7 +3,7 @@
     "private": true,
     "displayName": "ECSACT VSCode Support",
     "description": "ECSACT VSCode Support",
-    "version": "0.8.0",
+    "version": "1.0.0",
     "publisher": "Seaube",
     "repository": {
         "url": "https://github.com/seaube/ecsact-vscode"
