@@ -6,7 +6,7 @@
     "version": "0.8.0",
     "publisher": "Seaube",
     "repository": {
-        "url": "https://github.com/zaucy/ecs-idl-vscode"
+        "url": "https://github.com/seaube/ecs-idl-vscode"
     },
     "engines": {
         "vscode": "^1.45.0"
