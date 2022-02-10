@@ -6,7 +6,7 @@
     "version": "0.8.0",
     "publisher": "Seaube",
     "repository": {
-        "url": "https://github.com/zaucy/ecsact-vscode"
+        "url": "https://github.com/seaubey/ecsact-vscode"
     },
     "engines": {
         "vscode": "^1.45.0"
