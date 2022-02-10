@@ -1,12 +1,12 @@
 {
-    "name": "ecs-idl-vscode",
+    "name": "ecsact-vscode",
     "private": true,
-    "displayName": "ECS IDL VSCode Support",
-    "description": "ECS IDL VSCode Support",
+    "displayName": "ECSACT VSCode Support",
+    "description": "ECSACT VSCode Support",
     "version": "0.8.0",
     "publisher": "Seaube",
     "repository": {
-        "url": "https://github.com/zaucy/ecs-idl-vscode"
+        "url": "https://github.com/seaubey/ecsact-vscode"
     },
     "engines": {
         "vscode": "^1.45.0"
@@ -17,22 +17,22 @@
     "contributes": {
         "languages": [
             {
-                "id": "ecs-idl",
+                "id": "ecsact",
                 "aliases": [
-                    "ECS IDL",
-                    "ecs-idl"
+                    "ECSACT",
+                    "ecsact"
                 ],
                 "extensions": [
-                    ".ecs-idl"
+                    ".ecsact"
                 ],
                 "configuration": "./language-configuration.json"
             }
         ],
         "grammars": [
             {
-                "language": "ecs-idl",
-                "scopeName": "source.ecs-idl",
-                "path": "./syntaxes/ecs-idl.tmLanguage.json"
+                "language": "ecsact",
+                "scopeName": "source.ecsact",
+                "path": "./syntaxes/ecsact.tmLanguage.json"
             }
         ]
     },
@@ -41,6 +41,6 @@
         "js-yaml": "^3.13.1"
     },
     "scripts": {
-        "postversion": "vsce package && git push && cross-var git push origin v$npm_package_version && cross-var gh release create v$npm_package_version && cross-var gh release upload v$npm_package_version ecs-idl-vscode-$npm_package_version.vsix --clobber"
+        "postversion": "vsce package && git push && cross-var git push origin v$npm_package_version && cross-var gh release create v$npm_package_version && cross-var gh release upload v$npm_package_version ecsact-vscode-$npm_package_version.vsix --clobber"
     }
 }
