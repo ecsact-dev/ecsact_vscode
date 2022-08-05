@@ -3,3 +3,4 @@
 .gitignore
 .npmignore
 *.vsix
+node_modules
