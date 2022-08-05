@@ -3,7 +3,7 @@
     "private": true,
     "displayName": "Ecsact",
     "description": "",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "publisher": "Seaube",
     "repository": {
         "url": "https://github.com/seaube/ecsact-vscode"
