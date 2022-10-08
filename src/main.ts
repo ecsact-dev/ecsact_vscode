@@ -237,10 +237,22 @@ const statementDataParsers = {
 		return null;
 	},
 	[EcsactStatementType.BuiltinTypeField]: (statementStringStart: number, mem: ArrayBuffer, offset: number) => {
-		return null;
+		const data: EcsactFieldStatementData = {
+			fieldType: (new Int32Array(mem)).at(offset / 4)!,
+			fieldName: getParseStringAt(statementStringStart, mem, offset + 4),
+			length: (new Int32Array(mem)).at((offset / 4) + 2)!,
+		};
+
+		return data;
 	},
 	[EcsactStatementType.UserTypeField]: (statementStringStart: number, mem: ArrayBuffer, offset: number) => {
-		return null;
+		const data: EcsactUserTypeFieldStatementData = {
+			userTypeName: getParseStringAt(statementStringStart, mem, offset),
+			fieldName: getParseStringAt(statementStringStart, mem, offset + 4),
+			length: (new Int32Array(mem)).at((offset / 4) + 2)!,
+		};
+
+		return data;
 	},
 	[EcsactStatementType.EntityField]: (statementStringStart: number, mem: ArrayBuffer, offset: number) => {
 		return null;
@@ -307,9 +319,7 @@ async function loadEscactParseWasm() {
 	const source = new Uint8Array(await fs.readFile(ecsactparseWasmPath));
 	const imports: WebAssembly.Imports = {
 		'wasi_snapshot_preview1': {
-			'proc_exit': () => {
-				console.log('proc_exit called');
-			},
+			'proc_exit': () => { },
 			'fd_close': () => { },
 			'fd_write': () => { },
 			'fd_seek': () => { },
