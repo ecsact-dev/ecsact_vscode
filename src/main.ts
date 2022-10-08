@@ -41,6 +41,14 @@ enum EcsactParseStatusCode {
 	SyntaxError,
 };
 
+function statusOk(code: EcsactParseStatusCode): boolean {
+	return (
+		code == EcsactParseStatusCode.Ok ||
+		code == EcsactParseStatusCode.BlockBegin ||
+		code == EcsactParseStatusCode.BlockEnd
+	);
+}
+
 interface EcsactParseString {
 	value: string;
 	offset: number;
@@ -59,11 +67,94 @@ interface EcsactStatementGeneric<Type extends EcsactStatementType, Data> {
 
 type EcsactStatement =
 	EcsactStatementGeneric<EcsactStatementType.None, null> |
-	EcsactStatementGeneric<EcsactStatementType.Package, EcsactPackageStatementData>;
+	EcsactStatementGeneric<EcsactStatementType.Unknown, null> |
+	EcsactStatementGeneric<EcsactStatementType.Package, EcsactPackageStatementData> |
+	EcsactStatementGeneric<EcsactStatementType.Import, EcsactImportStatementData> |
+	EcsactStatementGeneric<EcsactStatementType.Component, EcsactComponentStatementData> |
+	EcsactStatementGeneric<EcsactStatementType.Transient, EcsactTransientStatementData> |
+	EcsactStatementGeneric<EcsactStatementType.System, EcsactSystemStatementData> |
+	EcsactStatementGeneric<EcsactStatementType.Action, EcsactActionStatementData> |
+	EcsactStatementGeneric<EcsactStatementType.Enum, EcsactEnumStatementData> |
+	EcsactStatementGeneric<EcsactStatementType.EnumValue, null> |
+	EcsactStatementGeneric<EcsactStatementType.BuiltinTypeField, null> |
+	EcsactStatementGeneric<EcsactStatementType.UserTypeField, null> |
+	EcsactStatementGeneric<EcsactStatementType.EntityField, null> |
+	EcsactStatementGeneric<EcsactStatementType.SystemComponent, null> |
+	EcsactStatementGeneric<EcsactStatementType.SystemGenerates, null> |
+	EcsactStatementGeneric<EcsactStatementType.SystemWithEntity, null> |
+	EcsactStatementGeneric<EcsactStatementType.EntityConstraint, null>;
 
 interface EcsactPackageStatementData {
 	main: boolean;
 	packageName: EcsactParseString;
+}
+
+interface EcsactImportStatementData {
+	importPackageName: EcsactParseString;
+}
+
+interface EcsactComponentStatementData {
+	componentName: EcsactParseString;
+}
+
+interface EcsactTransientStatementData {
+	transientName: EcsactParseString;
+}
+
+interface EcsactSystemStatementData {
+	systemName: EcsactParseString;
+}
+
+interface EcsactActionStatementData {
+	actionName: EcsactParseString;
+}
+
+interface EcsactEnumStatementData {
+	enumName: EcsactParseString;
+}
+
+interface EcsactEnumValueStatementData {
+	name: EcsactParseString;
+	value: number;
+}
+
+interface EcsactFieldStatementData {
+	fieldType: number; // ecsact_builtin_type
+	fieldName: EcsactParseString;
+	length: number;
+}
+
+interface EcsactUserTypeFieldStatementData {
+	userTypeName: EcsactParseString;
+	fieldName: EcsactParseString;
+	length: number;
+}
+
+interface EcsactSystemComponentStatementData {
+	capability: number; // ecsact_system_capability
+	componentName: EcsactParseString;
+	withEntityFieldName: EcsactParseString;
+}
+
+interface EcsactSystemWithEntityStatementData {
+	withEntityFieldName: EcsactParseString;
+}
+
+interface EcsactEntityConstraintStatementData {
+	optional: boolean;
+	constraintComponentName: EcsactParseString;
+}
+
+function getParseStringAt(statementStringStart: number, mem: ArrayBuffer, offset: number): EcsactParseString {
+	const i32mem = new Int32Array(mem);
+	const u8mem = new Uint8Array(mem);
+	const start = i32mem.at(offset / 4)!;
+	const len = i32mem.at((offset / 4) + 1)!;
+
+	return {
+		value: String.fromCharCode(...Array.from(u8mem.slice(start, start + len))),
+		offset: start - statementStringStart,
+	};
 }
 
 function getParseStatus(mem: ArrayBuffer, offset: number): EcsactParseStatus {
@@ -83,66 +174,99 @@ function getStatementType(mem: ArrayBuffer, offset: number): EcsactStatementType
 }
 
 const statementDataParsers = {
-	[EcsactStatementType.None]: (mem: ArrayBuffer, offset: number) => {
+	[EcsactStatementType.None]: (statementStringStart: number, mem: ArrayBuffer, offset: number) => {
 		return null;
 	},
-	[EcsactStatementType.Unknown]: (mem: ArrayBuffer, offset: number) => {
+	[EcsactStatementType.Unknown]: (statementStringStart: number, mem: ArrayBuffer, offset: number) => {
 		return null;
 	},
-	[EcsactStatementType.Package]: (mem: ArrayBuffer, offset: number) => {
+	[EcsactStatementType.Package]: (statementStringStart: number, mem: ArrayBuffer, offset: number) => {
+		const readableMemBufferU8 = new Uint8Array(mem);
+		const main = readableMemBufferU8.at(offset)!;
+
+		const data: EcsactPackageStatementData = {
+			main: !!main,
+			packageName: getParseStringAt(statementStringStart, mem, offset + 4),
+		};
+
+		return data;
+	},
+	[EcsactStatementType.Import]: (statementStringStart: number, mem: ArrayBuffer, offset: number) => {
+		const data: EcsactImportStatementData = {
+			importPackageName: getParseStringAt(statementStringStart, mem, offset),
+		};
+
+		return data;
+	},
+	[EcsactStatementType.Component]: (statementStringStart: number, mem: ArrayBuffer, offset: number) => {
+		const data: EcsactComponentStatementData = {
+			componentName: getParseStringAt(statementStringStart, mem, offset),
+		};
+
+		return data;
+	},
+	[EcsactStatementType.Transient]: (statementStringStart: number, mem: ArrayBuffer, offset: number) => {
+		const data: EcsactTransientStatementData = {
+			transientName: getParseStringAt(statementStringStart, mem, offset),
+		};
+
+		return data;
+	},
+	[EcsactStatementType.System]: (statementStringStart: number, mem: ArrayBuffer, offset: number) => {
+		const data: EcsactSystemStatementData = {
+			systemName: getParseStringAt(statementStringStart, mem, offset),
+		};
+
+		return data;
+	},
+	[EcsactStatementType.Action]: (statementStringStart: number, mem: ArrayBuffer, offset: number) => {
+		const data: EcsactActionStatementData = {
+			actionName: getParseStringAt(statementStringStart, mem, offset),
+		};
+
+		return data;
+	},
+	[EcsactStatementType.Enum]: (statementStringStart: number, mem: ArrayBuffer, offset: number) => {
+		const data: EcsactEnumStatementData = {
+			enumName: getParseStringAt(statementStringStart, mem, offset),
+		};
+
+		return data;
+	},
+	[EcsactStatementType.EnumValue]: (statementStringStart: number, mem: ArrayBuffer, offset: number) => {
 		return null;
 	},
-	[EcsactStatementType.Import]: (mem: ArrayBuffer, offset: number) => {
+	[EcsactStatementType.BuiltinTypeField]: (statementStringStart: number, mem: ArrayBuffer, offset: number) => {
 		return null;
 	},
-	[EcsactStatementType.Component]: (mem: ArrayBuffer, offset: number) => {
+	[EcsactStatementType.UserTypeField]: (statementStringStart: number, mem: ArrayBuffer, offset: number) => {
 		return null;
 	},
-	[EcsactStatementType.Transient]: (mem: ArrayBuffer, offset: number) => {
+	[EcsactStatementType.EntityField]: (statementStringStart: number, mem: ArrayBuffer, offset: number) => {
 		return null;
 	},
-	[EcsactStatementType.System]: (mem: ArrayBuffer, offset: number) => {
+	[EcsactStatementType.SystemComponent]: (statementStringStart: number, mem: ArrayBuffer, offset: number) => {
 		return null;
 	},
-	[EcsactStatementType.Action]: (mem: ArrayBuffer, offset: number) => {
+	[EcsactStatementType.SystemGenerates]: (statementStringStart: number, mem: ArrayBuffer, offset: number) => {
 		return null;
 	},
-	[EcsactStatementType.Enum]: (mem: ArrayBuffer, offset: number) => {
+	[EcsactStatementType.SystemWithEntity]: (statementStringStart: number, mem: ArrayBuffer, offset: number) => {
 		return null;
 	},
-	[EcsactStatementType.EnumValue]: (mem: ArrayBuffer, offset: number) => {
-		return null;
-	},
-	[EcsactStatementType.BuiltinTypeField]: (mem: ArrayBuffer, offset: number) => {
-		return null;
-	},
-	[EcsactStatementType.UserTypeField]: (mem: ArrayBuffer, offset: number) => {
-		return null;
-	},
-	[EcsactStatementType.EntityField]: (mem: ArrayBuffer, offset: number) => {
-		return null;
-	},
-	[EcsactStatementType.SystemComponent]: (mem: ArrayBuffer, offset: number) => {
-		return null;
-	},
-	[EcsactStatementType.SystemGenerates]: (mem: ArrayBuffer, offset: number) => {
-		return null;
-	},
-	[EcsactStatementType.SystemWithEntity]: (mem: ArrayBuffer, offset: number) => {
-		return null;
-	},
-	[EcsactStatementType.EntityConstraint]: (mem: ArrayBuffer, offset: number) => {
+	[EcsactStatementType.EntityConstraint]: (statementStringStart: number, mem: ArrayBuffer, offset: number) => {
 		return null;
 	},
 };
 
-function getStatement(mem: ArrayBuffer, offset: number): EcsactStatement | null {
+function getStatement(statementStringStart: number, mem: ArrayBuffer, offset: number): EcsactStatement {
 	const readableMemBuffer = new Int32Array(mem);
 
 	const id = readableMemBuffer.at(offset / 4)!;
 	const type = getStatementType(mem, offset);
+	const data = statementDataParsers[type](statementStringStart, mem, offset + 8);
 
-	return statementDataParsers[type](mem, offset + 12);
+	return { id, type, data } as EcsactStatement;
 }
 
 interface EcsactParseResult {
@@ -170,12 +294,8 @@ function ecsactParse(statementString: string): EcsactParseResult {
 
 	const parseStatus = getParseStatus(mem.buffer, outStatusIndex);
 	let statement: EcsactStatement | null = null;
-	switch (parseStatus.code) {
-		case EcsactParseStatusCode.Ok:
-		case EcsactParseStatusCode.BlockBegin:
-		case EcsactParseStatusCode.BlockEnd:
-			statement = getStatement(mem.buffer, outStatementIndex);
-			break;
+	if (statusOk(parseStatus.code)) {
+		statement = getStatement(statementStrIndex, mem.buffer, outStatementIndex);
 	}
 
 	stackRestore(stack);
@@ -209,23 +329,104 @@ async function loadEscactParseWasmIfNeeded() {
 	}
 }
 
-class EcsactSemanticTokens implements vscode.DocumentSemanticTokensProvider {
+class EcsactSemanticTokens implements vscode.DocumentRangeSemanticTokensProvider {
 	static legend: vscode.SemanticTokensLegend = {
 		tokenModifiers: [],
-		tokenTypes: [],
+		tokenTypes: ['keyword', 'namespace', 'type'],
 	};
 
-	async provideDocumentSemanticTokens(document: vscode.TextDocument, token: vscode.CancellationToken): Promise<vscode.SemanticTokens> {
+	async provideDocumentRangeSemanticTokens(document: vscode.TextDocument, range: vscode.Range, token: vscode.CancellationToken): Promise<vscode.SemanticTokens> {
 		await loadEscactParseWasmIfNeeded();
 		const builder = new vscode.SemanticTokensBuilder(EcsactSemanticTokens.legend);
 
-		let lineCount = document.lineCount;
-		let currentLineNo = -1;
+		while (!range.isEmpty) {
+			if (token.isCancellationRequested) break;
 
-		while (lineCount > currentLineNo + 1) {
-			const currentLine = document.lineAt(++currentLineNo);
-			const result = ecsactParse(currentLine.text);
-			console.log(currentLine.text, result);
+			const currentLineNo = range.start.line;
+			const text = document.getText(range);
+
+			const addToken = (tokenType: number, str: EcsactParseString) => {
+				builder.push(currentLineNo, str.offset, str.value.length, tokenType);
+			};
+
+			const addKeyword = (keyword: string) => {
+				builder.push(currentLineNo, text.indexOf(keyword), keyword.length, 0);
+			};
+
+			const result = ecsactParse(text);
+			if (statusOk(result.parseStatus.code)) {
+				switch (result.statement?.type) {
+					case EcsactStatementType.Package:
+						if (result.statement!.data.main) addKeyword('main');
+						addKeyword('package');
+						addToken(1, result.statement!.data.packageName);
+						break;
+					case EcsactStatementType.Import:
+						addKeyword('import');
+						addToken(1, result.statement!.data.importPackageName);
+						break;
+					case EcsactStatementType.Component:
+						addKeyword('component');
+						addToken(2, result.statement!.data.componentName);
+						break;
+					case EcsactStatementType.Transient:
+						addKeyword('transient');
+						addToken(2, result.statement!.data.transientName);
+						break;
+					case EcsactStatementType.System:
+						addKeyword('system');
+						addToken(2, result.statement!.data.systemName);
+						break;
+					case EcsactStatementType.Action:
+						addKeyword('action');
+						addToken(2, result.statement!.data.actionName);
+						break;
+					case EcsactStatementType.Enum:
+						addKeyword('enum');
+						addToken(2, result.statement!.data.enumName);
+						break;
+				}
+
+				const startDelta = {
+					lineDelta: 0,
+					characterDelta: 0,
+				};
+				for (let i = 0; result.readAmount > i; ++i) {
+					if (text[i] == '\n') {
+						startDelta.lineDelta += 1;
+						startDelta.characterDelta = 0;
+					} else {
+						startDelta.characterDelta += 1;
+					}
+				}
+
+				range = range.with(range.start.translate(startDelta));
+			} else {
+				// const lineIndex = text.indexOf('\n');
+				// const semiColonIndex = text.indexOf(';');
+
+				// const startDelta = {
+				// 	lineDelta: 0,
+				// 	characterDelta: 0,
+				// };
+
+				// if (lineIndex != -1 && semiColonIndex != -1) {
+				// 	if (semiColonIndex < lineIndex) {
+				// 		startDelta.characterDelta = semiColonIndex + 1;
+				// 	} else {
+				// 		startDelta.lineDelta = 1;
+				// 	}
+				// } else if (lineIndex != -1) {
+				// 	startDelta.lineDelta = 1;
+				// } else if (semiColonIndex != -1) {
+				// 	startDelta.characterDelta = semiColonIndex + 1;
+				// } else {
+				// 	break;
+				// }
+
+				// range = range.with(range.start.translate(startDelta));
+				break;
+			}
 		}
 
 		return builder.build();
@@ -237,7 +438,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		vscode.commands.registerCommand('ecsact.restart-lang-server', async () => {
 			await client!.restart().catch(catchLangServerError);
 		}),
-		vscode.languages.registerDocumentSemanticTokensProvider(
+		vscode.languages.registerDocumentRangeSemanticTokensProvider(
 			{ language: 'ecsact' },
 			new EcsactSemanticTokens(),
 			EcsactSemanticTokens.legend,
