@@ -1,5 +1,6 @@
-main package debug;
+package asd;
 
-component ExampleComponent {
-
+component Position {
+  f32 x;
+  f32 y;
 }

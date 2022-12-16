@@ -1,3 +1,6 @@
 {
-	"ecsact.trace.server": "verbose"
+	"ecsact.trace.server": "verbose",
+	"ecsact.lsp.executable.win32": {
+		"command": "../../ecsact_lsp_server/bazel-bin/ecsact_lsp_server.exe"
+	}
 }

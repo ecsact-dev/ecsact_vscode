@@ -3,6 +3,7 @@
     "configurations": [
         {
             "args": [
+                "${workspaceFolder}/debug",
                 "--extensionDevelopmentPath=${workspaceFolder}"
             ],
             "name": "Launch Extension",

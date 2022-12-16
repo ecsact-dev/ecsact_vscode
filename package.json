@@ -17,7 +17,7 @@
     "main": "out/main",
     "activationEvents": [
         "onLanguage:ecsact",
-        "onCommand:ecsact.restart-lang-server"
+        "onCommand:ecsact.lsp.restart"
     ],
     "contributes": {
         "configuration": {
@@ -32,12 +32,44 @@
                     ],
                     "default": "off",
                     "description": "Traces the communication between VS Code and the Ecsact language server."
+                },
+                "ecsact.lsp.executable.default": {
+                    "scope": "window",
+                    "type": "object",
+                    "properties": {
+                        "command": {
+                            "type": "string",
+                            "default": "ecsact_lsp_server"
+                        },
+                        "args": {
+                            "type": "array",
+                            "default": [],
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "ecsact.lsp.executable.win32": {
+                    "scope": "window",
+                    "type": "object",
+                    "properties": {
+                        "command": {
+                            "type": "string"
+                        },
+                        "args": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
                 }
             }
         },
         "commands": [
             {
-                "command": "ecsact.restart-lang-server",
+                "command": "ecsact.lsp.restart",
                 "title": "Restart Language Server",
                 "category": "Ecsact"
             }
@@ -64,8 +96,8 @@
         ]
     },
     "devDependencies": {
-        "@types/node": "^16.11.45",
-        "@types/vscode": "^1.69.0",
+        "@types/node": "^18.11.15",
+        "@types/vscode": "^1.74.0",
         "@typescript-eslint/eslint-plugin": "^5.30.0",
         "@typescript-eslint/parser": "^5.30.0",
         "cross-var": "^1.1.0",
