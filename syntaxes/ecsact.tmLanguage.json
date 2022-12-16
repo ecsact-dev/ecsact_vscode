@@ -1,12 +1,15 @@
 {
 	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-	"name": "ECSACT",
+	"name": "Ecsact",
 	"patterns": [
 		{
 			"include": "#global_keywords"
 		},
 		{
 			"include": "#comments"
+		},
+		{
+			"include": "#type_decl"
 		},
 		{
 			"include": "#component_decl"
@@ -53,13 +56,16 @@
 		"type_decl": {
 			"patterns": [
 				{
-					"match": "\\b(component|transient|action|enum|struct)\\b\\s+([A-Za-z]+)",
+					"match": "\\b(component|transient|action|enum|struct)\\b\\s+([A-Za-z]+)(;)",
 					"captures": {
 						"1": {
 							"name": "keyword.ecsact"
 						},
 						"2": {
 							"name": "entity.name.type"
+						},
+						"3": {
+							"name": "punctuation"
 						}
 					}
 				}
@@ -90,6 +96,9 @@
 			"patterns": [
 				{
 					"include": "#field_decl"
+				},
+				{
+					"include": "constrained_entity_field_decl"
 				},
 				{
 					"include": "#comments"
@@ -232,13 +241,13 @@
 		"field_decl": {
 			"patterns": [
 				{
-					"match": "\\b((int8|uint8|int16|uint16|int32|uint32|bool|decimal32)|([A-Za-z]+))\\b(\\s*\\[\\s*(\\d*)\\s*\\]\\s*)?\\s+([A-Za-z]+)(;*)",
+					"match": "\\b((i8|u8|i16|u16|i32|u32|bool|f32|entity)|([A-Za-z]+))\\b(\\s*\\[\\s*(\\d*)\\s*\\]\\s*)?\\s+([A-Za-z]+)(;*)",
 					"captures": {
 						"2": {
-							"name": "storage.type"
+							"name": "storage"
 						},
 						"3": {
-							"name": "entity.name.type"
+							"name": "support.type.property-name"
 						},
 						"5": {
 							"name": "constant.numeric.decimal.ecsact"
@@ -250,18 +259,55 @@
 				}
 			]
 		},
+		"constrained_entity_field_decl": {
+			"begin": "\\b(entity)\\b\\s+([A-Za-z]+)\\s*({?)",
+			"end": "(})",
+			"beginCaptures": {
+				"1": {
+					"name": "keyword.ecsact"
+				},
+				"2": {
+					"name": "entity.name.type"
+				},
+				"3": {
+					"name": "punctuation"
+				},
+				"4": {
+					"name": "punctuation"
+				}
+			},
+			"endCaptures": {
+				"1": {
+					"name": "punctuation"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#system_component_decl"
+				},
+				{
+					"include": "#comments"
+				}
+			]
+		},
 		"system_component_decl": {
 			"patterns": [
 				{
-					"match": "(((required\\s+readonly|optional\\s+readonly|required|optional|readonly|exclude|include|adds|removes)\\s+)+)([A-Za-z]+)\\s*(;*)",
+					"match": "(((readwrite|writeonly|readonly|exclude|include|adds|removes)\\s+)+)([A-Za-z]+)\\s*((with)\\s+([A-Za-z]+)\\s+)?(;*)",
 					"captures": {
 						"3": {
-							"name": "keyword.control"
+							"name": "entity.name.function"
 						},
 						"4": {
 							"name": "entity.name.type"
 						},
-						"5": {
+						"6": {
+							"name": "entity.name.function"
+						},
+						"7": {
+							"name": "support.type.property-name"
+						},
+						"8": {
 							"name": "punctuation"
 						}
 					}

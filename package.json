@@ -2,8 +2,8 @@
     "name": "ecsact-vscode",
     "private": true,
     "displayName": "Ecsact",
-    "description": "",
-    "version": "1.0.5",
+    "description": "Ecsact vscode support",
+    "version": "1.0.2",
     "publisher": "Seaube",
     "repository": {
         "url": "https://github.com/seaube/ecsact-vscode"
@@ -14,7 +14,66 @@
     "categories": [
         "Programming Languages"
     ],
+    "main": "out/main",
+    "activationEvents": [
+        "onLanguage:ecsact",
+        "onCommand:ecsact.lsp.restart"
+    ],
     "contributes": {
+        "configuration": {
+            "properties": {
+                "ecsact.trace.server": {
+                    "scope": "window",
+                    "type": "string",
+                    "enum": [
+                        "off",
+                        "messages",
+                        "verbose"
+                    ],
+                    "default": "off",
+                    "description": "Traces the communication between VS Code and the Ecsact language server."
+                },
+                "ecsact.lsp.executable.default": {
+                    "scope": "window",
+                    "type": "object",
+                    "properties": {
+                        "command": {
+                            "type": "string",
+                            "default": "ecsact_lsp_server"
+                        },
+                        "args": {
+                            "type": "array",
+                            "default": [],
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "ecsact.lsp.executable.win32": {
+                    "scope": "window",
+                    "type": "object",
+                    "properties": {
+                        "command": {
+                            "type": "string"
+                        },
+                        "args": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "commands": [
+            {
+                "command": "ecsact.lsp.restart",
+                "title": "Restart Language Server",
+                "category": "Ecsact"
+            }
+        ],
         "languages": [
             {
                 "id": "ecsact",
@@ -37,11 +96,23 @@
         ]
     },
     "devDependencies": {
+        "@types/node": "^18.11.15",
+        "@types/vscode": "^1.74.0",
+        "@typescript-eslint/eslint-plugin": "^5.30.0",
+        "@typescript-eslint/parser": "^5.30.0",
         "cross-var": "^1.1.0",
+        "eslint": "^8.13.0",
         "js-yaml": "^3.13.1",
-        "vsce": "^2.10.0"
+        "typescript": "^4.7.2"
     },
     "scripts": {
-        "postversion": "vsce package && git push && cross-var git push origin v$npm_package_version && cross-var gh release create v$npm_package_version && cross-var gh release upload v$npm_package_version ecsact-vscode-$npm_package_version.vsix --clobber && cross-var vsce publish $npm_package_version"
+        "postversion": "vsce package && git push && cross-var git push origin v$npm_package_version && cross-var gh release create v$npm_package_version && cross-var gh release upload v$npm_package_version ecsact-vscode-$npm_package_version.vsix --clobber",
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "lint": "eslint . --ext .ts,.tsx",
+        "watch": "tsc -watch -p ./"
+    },
+    "dependencies": {
+        "vscode-languageclient": "^8.0.2"
     }
 }
