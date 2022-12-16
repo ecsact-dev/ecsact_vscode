@@ -1,6 +1,22 @@
 package asd;
 
+enum Direction {
+  North = 1;
+  Left = 2;
+  Bottom = 3;
+  Up = 4;
+}
+
+component TagComponent;
+
 component Position {
   f32 x;
   f32 y;
+}
+
+system asd {
+  readwrite Asd;
+  readwrite Position with asd {
+
+  }
 }
