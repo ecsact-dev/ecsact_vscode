@@ -2,8 +2,8 @@
     "name": "ecsact-vscode",
     "private": true,
     "displayName": "Ecsact",
-    "description": "",
-    "version": "1.0.5",
+    "description": "Ecsact vscode support",
+    "version": "1.0.2",
     "publisher": "Seaube",
     "repository": {
         "url": "https://github.com/seaube/ecsact-vscode"
@@ -101,13 +101,6 @@
         "@typescript-eslint/eslint-plugin": "^5.30.0",
         "@typescript-eslint/parser": "^5.30.0",
         "cross-var": "^1.1.0",
-<<<<<<< HEAD
-        "js-yaml": "^3.13.1",
-        "vsce": "^2.10.0"
-    },
-    "scripts": {
-        "postversion": "vsce package && git push && cross-var git push origin v$npm_package_version && cross-var gh release create v$npm_package_version && cross-var gh release upload v$npm_package_version ecsact-vscode-$npm_package_version.vsix --clobber && cross-var vsce publish $npm_package_version"
-=======
         "eslint": "^8.13.0",
         "js-yaml": "^3.13.1",
         "typescript": "^4.7.2"
@@ -121,6 +114,5 @@
     },
     "dependencies": {
         "vscode-languageclient": "^8.0.2"
->>>>>>> 00ab430 (lang server support)
     }
 }
