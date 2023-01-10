@@ -9,7 +9,7 @@
         "url": "https://github.com/seaube/ecsact-vscode"
     },
     "engines": {
-        "vscode": "^1.45.0"
+        "vscode": "^1.74.0"
     },
     "categories": [
         "Programming Languages"
@@ -100,6 +100,7 @@
         "@types/vscode": "^1.74.0",
         "@typescript-eslint/eslint-plugin": "^5.30.0",
         "@typescript-eslint/parser": "^5.30.0",
+        "@vscode/vsce": "^2.16.0",
         "cross-var": "^1.1.0",
         "eslint": "^8.13.0",
         "js-yaml": "^3.13.1",
