@@ -1,6 +1,10 @@
 .vscode/**
 .vscode-test/**
+debug/**
+src/**
 .gitignore
 .npmignore
 *.vsix
 node_modules
+*.tsbuildinfo
+*.map
